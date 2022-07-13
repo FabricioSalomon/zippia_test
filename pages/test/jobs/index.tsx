@@ -1,7 +1,7 @@
 import axios from "axios";
+import Head from "next/head";
 import { Header } from "../../../components/Header";
 import { JobsList } from "../../../components/JobsList";
-import Head from "../../../node_modules/next/head";
 import { JobsQuery } from "../../../utils/jobs";
 
 type HomeProps = {
@@ -10,7 +10,7 @@ type HomeProps = {
 
 export default function Home(props: HomeProps) {
   return (
-    <div className="container">
+    <div>
       <Head>
         <title>Zippia Jobs</title>
         <link
