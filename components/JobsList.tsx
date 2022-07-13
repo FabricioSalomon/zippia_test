@@ -1,21 +1,29 @@
 import { JobsQuery } from "../utils/jobs";
 import moment from "moment";
-
+import { useEffect, useState } from "react";
 
 type JobsListProps = {
   jobs: JobsQuery[];
 };
 
 export function JobsList({ jobs }: JobsListProps) {
+  const [jobsList, setJobsList] = useState<JobsQuery[]>([]);
+
+  useEffect(() => {
+    const jobsListCopy = [...jobs];
+    const firstTen = jobsListCopy.slice(0, 10);
+    setJobsList(firstTen);
+  }, [jobs]);
+
   return (
     <>
-      {jobs.map((job, index) => {
+      {jobsList.map((job, index) => {
         return (
           <div>
             <br />
             <h3 key={index}>{job.jobTitle}</h3>
             <h4 key={index}>{job.companyName}</h4>
-            <h5 key={index}>{moment(job.postingDate).format('YYYY-MMM-DD')}</h5>
+            <h5 key={index}>{moment(job.postingDate).format("YYYY-MMM-DD")}</h5>
             <p key={index}>{job.jobDescription}</p>
           </div>
         );
