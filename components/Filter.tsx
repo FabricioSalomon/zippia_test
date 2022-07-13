@@ -18,16 +18,19 @@ export function Filter({
   const [isSelectedDate, setIsSelectedDate] = useState(false);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
 
+  // open/close filter by company name dropdown
   function handleOpenCompanyFilter() {
     setIsDatePostedOpen(false);
     setIsCompanyListOpen(!isCompanyListOpen);
   }
 
+  // open/close filter by date dropdown
   function handleOpenDateFilter() {
     setIsCompanyListOpen(false);
     setIsDatePostedOpen(!isDatePostedOpen);
   }
 
+  // filter companies
   function handleCompanyFilter() {
     if (isSelectedDate && selectedCompanies.length) {
       onFilterCompaniesByName(selectedCompanies);
@@ -42,6 +45,7 @@ export function Filter({
     }
   }
 
+  // set the array os company names to filter by
   function addCompanyNameToFilter(company: string) {
     const selected = [...selectedCompanies];
 

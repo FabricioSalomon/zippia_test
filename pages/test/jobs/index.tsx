@@ -17,6 +17,7 @@ export default function Home({ jobs }: HomeProps) {
   ]);
   const [companiesName, setCompaniesName] = useState<string[]>([]);
 
+  // get the first 10 jobs only on first rendering
   useEffect(() => {
     const jobsListCopy = [...jobs];
     const firstTenJobs = jobsListCopy.slice(0, 10);
@@ -25,6 +26,7 @@ export default function Home({ jobs }: HomeProps) {
     setfilteredCompanies(firstTenJobs);
   }, []);
 
+  // filter companies by their name
   function handleFilteredCompaniesByName(companyName: string[]) {
     if (companyName.length) {
       setfilteredCompanies(
@@ -37,6 +39,7 @@ export default function Home({ jobs }: HomeProps) {
     }
   }
 
+  // filter companies by date
   function handleFilteredCompaniesPostedDate(selectedDate: boolean) {
     if (selectedDate) {
       const lastWeek = moment().subtract(7, "days").format("YYYY-MM-DD");

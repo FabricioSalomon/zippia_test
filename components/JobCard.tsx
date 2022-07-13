@@ -1,5 +1,4 @@
 import moment from "moment";
-import Image from "next/image";
 import { JobsQuery } from "../utils/jobs";
 
 type JobCardProps = {
