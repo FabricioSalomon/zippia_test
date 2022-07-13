@@ -1,4 +1,5 @@
 import moment from "moment";
+import Image from "next/image";
 import { JobsQuery } from "../utils/jobs";
 
 type JobCardProps = {
@@ -13,7 +14,9 @@ export function JobCard({ job }: JobCardProps) {
           <span className="text-lg font-bold">{job.jobTitle}</span>
         </div>
         <div>
-          <span className="text-md font-bold text-slate-600">{job.companyName}</span>
+          <span className="text-md font-bold text-slate-600">
+            {job.companyName}
+          </span>
         </div>
         <div>
           <span className="text-sm font-semibold text-slate-500">

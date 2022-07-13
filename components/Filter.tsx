@@ -1,13 +1,21 @@
 import { useState } from "react";
+import { CompanyDropdown } from "./CompanyDropdown";
+import { PostedDateDropdown } from "./PostedDateDropdown";
 
 type FilterProps = {
   companies: string[];
-  onFilteredCompaniesByName: (companyName: string[]) => void;
+  onFilterCompaniesByName: (companyName: string[]) => void;
+  onFilterCompaniesPostedDate: (selectedDate: boolean) => void;
 };
 
-export function Filter({ companies, onFilteredCompaniesByName }: FilterProps) {
+export function Filter({
+  companies,
+  onFilterCompaniesByName,
+  onFilterCompaniesPostedDate,
+}: FilterProps) {
   const [isCompanyListOpen, setIsCompanyListOpen] = useState(false);
   const [isDatePostedOpen, setIsDatePostedOpen] = useState(false);
+  const [isSelectedDate, setIsSelectedDate] = useState(false);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
 
   function handleOpenCompanyFilter() {
@@ -18,6 +26,20 @@ export function Filter({ companies, onFilteredCompaniesByName }: FilterProps) {
   function handleOpenDateFilter() {
     setIsCompanyListOpen(false);
     setIsDatePostedOpen(!isDatePostedOpen);
+  }
+
+  function handleCompanyFilter() {
+    if (isSelectedDate && selectedCompanies.length) {
+      onFilterCompaniesByName(selectedCompanies);
+      onFilterCompaniesPostedDate(true);
+    } else if (selectedCompanies.length) {
+      onFilterCompaniesByName(selectedCompanies);
+    } else if (isSelectedDate) {
+      onFilterCompaniesPostedDate(true);
+    } else {
+      onFilterCompaniesPostedDate(false);
+      onFilterCompaniesByName([]);
+    }
   }
 
   function addCompanyNameToFilter(company: string) {
@@ -34,55 +56,40 @@ export function Filter({ companies, onFilteredCompaniesByName }: FilterProps) {
   }
 
   return (
-    <div className="flex flex-row space-x-2 justify-end mt-5 px-5">
+    <div className="flex flex-row space-x-2 justify-center mt-5 px-5">
       <div className="select-none relative">
         <div
           onClick={() => handleOpenCompanyFilter()}
-          className="w-max rounded border border-gray-300 p-1 hover:bg-slate-400 hover:cursor-pointer"
+          className="w-max rounded border border-gray-300 p-1 hover:bg-[#f7f8f9] hover:cursor-pointer"
         >
           <span>Companies</span>
         </div>
         {isCompanyListOpen && (
-          <div className="absolute -left-20 hover:none hover:cursor-pointer h-64 bg-white p-2 border-2 rounded overflow-y-auto">
-            <div className="w-52 space-y-2">
-              {companies.map((company, index) => {
-                return (
-                  <div key={index} className="flex flex-row">
-                    <label className="cursor-pointer">
-                      <input
-                        onChange={() => addCompanyNameToFilter(company)}
-                        type="checkbox"
-                        checked={selectedCompanies.includes(company)}
-                      />
-                      <span className="ml-2">{company}</span>
-                    </label>
-                  </div>
-                );
-              })}
-              <div className="space-x-4">
-                <button onClick={() => handleOpenCompanyFilter()}>
-                  Cancel
-                </button>
-                <button
-                  onClick={() => {
-                    onFilteredCompaniesByName(selectedCompanies);
-                    handleOpenCompanyFilter();
-                  }}
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-          </div>
+          <CompanyDropdown
+            companies={companies}
+            selectedCompanies={selectedCompanies}
+            addCompanyNameToFilter={addCompanyNameToFilter}
+            onOpenCompanyFilter={handleOpenCompanyFilter}
+            onCompanyFilter={handleCompanyFilter}
+          />
         )}
       </div>
-      <div
-        onClick={() => handleOpenDateFilter()}
-        className="w-max rounded border border-gray-300 p-1 hover:bg-slate-400 hover:cursor-pointer select-none relative"
-      >
-        <span>Date Posted</span>
+      <div className="select-none relative">
+        <div
+          onClick={() => handleOpenDateFilter()}
+          className="w-max rounded border border-gray-300 p-1 hover:bg-[#f7f8f9] hover:cursor-pointer"
+        >
+          <span>Date Posted</span>
+        </div>
+        {isDatePostedOpen && (
+          <PostedDateDropdown
+            isSelectedDate={isSelectedDate}
+            onSelectedDate={setIsSelectedDate}
+            onOpenDateFilter={handleOpenDateFilter}
+            onCompanyFilter={handleCompanyFilter}
+          />
+        )}
       </div>
-      {isDatePostedOpen && <div></div>}
     </div>
   );
 }

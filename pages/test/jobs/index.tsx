@@ -1,4 +1,5 @@
 import axios from "axios";
+import moment from "moment";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Filter } from "../../../components/Filter";
@@ -36,6 +37,23 @@ export default function Home({ jobs }: HomeProps) {
     }
   }
 
+  function handleFilteredCompaniesPostedDate(selectedDate: boolean) {
+    if (selectedDate) {
+      const lastWeek = moment().subtract(7, "days").format("YYYY-MM-DD");
+
+      setfilteredCompanies(
+        filteredCompanies.filter((company) => {
+          const postedDate = moment(company.postingDate).format("YYYY-MM-DD");
+          return moment(postedDate).isSameOrAfter(moment(lastWeek));
+        })
+      );
+    } else {
+      const jobsListCopy = [...jobs];
+      const firstTenJobs = jobsListCopy.slice(0, 10);
+      setfilteredCompanies(firstTenJobs);
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -48,7 +66,8 @@ export default function Home({ jobs }: HomeProps) {
       <Header />
       <Filter
         companies={companiesName}
-        onFilteredCompaniesByName={handleFilteredCompaniesByName}
+        onFilterCompaniesByName={handleFilteredCompaniesByName}
+        onFilterCompaniesPostedDate={handleFilteredCompaniesPostedDate}
       />
       <JobsList jobs={filteredCompanies} />
     </div>
