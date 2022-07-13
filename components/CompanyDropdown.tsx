@@ -14,7 +14,7 @@ export function CompanyDropdown({
   onCompanyFilter,
 }: CompanyDropdownProps) {
   return (
-    <div className="absolute hover:none hover:cursor-pointer h-64 bg-white p-2 border-2 rounded overflow-y-auto">
+    <div className="absolute hover:none hover:cursor-pointer h-64 bg-white p-2 border-2 rounded overflow-y-auto overflow-x-hidden">
       <div className="w-52 space-y-2">
         {companies.map((company, index) => {
           return (
