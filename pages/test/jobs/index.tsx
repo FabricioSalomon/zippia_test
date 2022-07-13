@@ -1,5 +1,7 @@
 import axios from "axios";
 import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Filter } from "../../../components/Filter";
 import { Header } from "../../../components/Header";
 import { JobsList } from "../../../components/JobsList";
 import { JobsQuery } from "../../../utils/jobs";
@@ -8,7 +10,32 @@ type HomeProps = {
   jobs: JobsQuery[];
 };
 
-export default function Home(props: HomeProps) {
+export default function Home({ jobs }: HomeProps) {
+  const [filteredCompanies, setfilteredCompanies] = useState<JobsQuery[]>([
+    ...jobs,
+  ]);
+  const [companiesName, setCompaniesName] = useState<string[]>([]);
+
+  useEffect(() => {
+    const jobsListCopy = [...jobs];
+    const firstTenJobs = jobsListCopy.slice(0, 10);
+    const names = firstTenJobs.map((job) => job.companyName);
+    setCompaniesName(names);
+    setfilteredCompanies(firstTenJobs);
+  }, []);
+
+  function handleFilteredCompaniesByName(companyName: string[]) {
+    if (companyName.length) {
+      setfilteredCompanies(
+        jobs.filter((job) => companyName.includes(job.companyName))
+      );
+    } else {
+      const jobsListCopy = [...jobs];
+      const firstTenJobs = jobsListCopy.slice(0, 10);
+      setfilteredCompanies(firstTenJobs);
+    }
+  }
+
   return (
     <div>
       <Head>
@@ -19,7 +46,11 @@ export default function Home(props: HomeProps) {
         />
       </Head>
       <Header />
-      <JobsList jobs={props.jobs} />
+      <Filter
+        companies={companiesName}
+        onFilteredCompaniesByName={handleFilteredCompaniesByName}
+      />
+      <JobsList jobs={filteredCompanies} />
     </div>
   );
 }
